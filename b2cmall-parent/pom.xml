@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.wzw.b2cmall</groupId>
+    <artifactId>b2cmall-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>b2cmall-parent</name>
+    <description>b2cmall-parent</description>
+
+    <!--以导入pom的方式进行版本管理时,不能继承properties属性和pluginManager中管理的版本
+       只能继承直接父dependencyManagermenth中管理的依赖版本,
+       为了能更好是使用官方管理的版本,减少自己版本管理复杂都,这子最好集成,而不是使用pom方式引入-->
+    <parent>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>2.6.13</version>
+        <relativePath></relativePath>
+    </parent>
+
+    <packaging>pom</packaging>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
+        <spring-cloud.version>2021.0.5</spring-cloud.version>
+        <spring-boot.version>2.6.13</spring-boot.version>
+
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
+        <spirng-boot-shiro.version>1.9.0</spirng-boot-shiro.version>
+        <common-lang.version>2.6</common-lang.version>
+        <common-io.version>2.11.0</common-io.version>
+
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--为子项目提供自己的父项目的版本管理,不引入实际的jar包-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+          <!--  <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+                <scope>compile</scope>
+            </dependency>
+           <!-- &lt;!&ndash;
+            这两个mybatis-plus-starter中内部管理的的依赖交由需要的子模块自己去管理,
+            这里只提供mybatis-plus-starter的版本管理
+            &ndash;&gt;
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-core</artifactId>
+                <version>${mybatis-plus.version}</version>
+                &lt;!&ndash;版本号和mybatis-plus中包含的一致,
+                这里在写一篇是因为子模块可能只需要引入这一个模块,而不是整个mybtisplus模块,
+                如果这里不显示的定义一遍版本号,会导致maven时好时坏,大部分之间都报错,无法找到以依赖的版本号
+                &ndash;&gt;
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-extension</artifactId>
+                &lt;!&ndash;同上理&ndash;&gt;
+                <version>${mybatis-plus.version}</version>
+            </dependency>-->
+
+            <!-- 以后会使用spring security 框架而不是shiro框架,到时候会删除该依赖-->
+            <!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-spring-boot-web-starter -->
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-spring-boot-web-starter</artifactId>
+                <version>${spirng-boot-shiro.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${common-lang.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${common-io.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+
+    <!--这个父模块只管理依赖版本(包括擦插件) ,不引入任何依赖,这样即防止子模块引入一些
+    用不到的模块,是的打包后的文件冗余,
+    更有甚者,由于引入了一些模块或插件导致子模块报一些不明所以的错误
+     如:  1.父模块引入了shiro-spring-boot-stater,而子模块没有进行相应的配置,
+         导致报错shiro相关的错误,而子模块根本就没有引入shiro,导致报错不明所以
+         2.父模块引入了spirng-boot的打包插件,而子模块是一个没有主启动类的类,
+         导致mvn install时报错找不到主类,而子模块根本就没有引入配置任何打包插件,导致报错不明所以
+    -->
+    <dependencies>
+
+    </dependencies>
+
+
+    <build>
+        <!--由于继承了spring-boot-parent,继承了其管理的依赖,这里不在需要管理-->
+        <pluginManagement>
+
+        </pluginManagement>
+
+    </build>
+
+
+</project>

@@ -9,3 +9,25 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+
+
+
+**/mvnw
+**/mvnw.cmd
+
+**/.mvn
+**/target/
+
+.idea
+
+**/.gitignore
+
+# 开发时用到的便于开发的目录,不属于实际的项目
+# 参考的他人的项目
+/renren-fast
+# 用一个简单的项目用于测试验证一些知识
+/demo
+# 用于暂存开发时自动生成的代码
+/temp_generate_codes
+# 自动生成代码的模块
+/renren-generator

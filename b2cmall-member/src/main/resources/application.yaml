@@ -1,0 +1,23 @@
+# 应用服务 WEB 访问端口
+server:
+  port: 8082
+
+debug: false
+
+spring:
+  datasource:
+    username: root
+    password: root
+    #如果出现com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure等问题首先检查jdbc的url是否正确，
+    #在8.0以上需要注意，有些参数已经被废弃但是必须的参数有以下
+    #jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;characterEncodeing=UTF-8&amp;useSSL=false&amp;serverTimezone=GMT
+    url: jdbc:mysql://10.0.0.208:3306/b2cmall_ums?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
