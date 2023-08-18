@@ -36,6 +36,9 @@
         <spirng-boot-shiro.version>1.9.0</spirng-boot-shiro.version>
         <common-lang.version>2.6</common-lang.version>
         <common-io.version>2.11.0</common-io.version>
+        <cglib.version>3.3.0</cglib.version>
+        <log4j.version>1.2.17</log4j.version>
+        <knife4j.version>3.0.3</knife4j.version>
 
     </properties>
 
@@ -111,6 +114,29 @@
                 <version>${common-io.version}</version>
             </dependency>
 
+
+            <!--cglib动态代理实现对象间属性潜复制-->
+            <!-- https://mvnrepository.com/artifact/cglib/cglib -->
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring-boot-starter -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
@@ -124,6 +150,7 @@
          导致mvn install时报错找不到主类,而子模块根本就没有引入配置任何打包插件,导致报错不明所以
     -->
     <dependencies>
+
 
     </dependencies>
 

@@ -12,6 +12,7 @@
         <artifactId>b2cmall-parent</artifactId>
         <groupId>com.wzw.b2cmall</groupId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath></relativePath>
     </parent>
 
     <properties>
@@ -67,7 +68,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.wzw.b2cmall.b2cmallcoupon.B2cmallCouponApplication</mainClass>
+                    <mainClass>com.wzw.b2cmall.coupon.B2cmallCouponApplication</mainClass>
                     <skip>true</skip>
                 </configuration>
                 <executions>

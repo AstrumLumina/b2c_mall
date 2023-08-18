@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.wzw.b2cmall.b2cmallproduct.dao.PmsCategoryDao">
+
+
+<mapper namespace="com.wzw.b2cmall.product.dao.PmsCategoryDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.wzw.b2cmall.b2cmallproduct.entity.PmsCategoryEntity" id="pmsCategoryMap">
+    <resultMap type="com.wzw.b2cmall.product.pojo.entity.PmsCategoryEntity" id="pmsCategoryMap">
         <result property="catId" column="cat_id"/>
         <result property="name" column="name"/>
         <result property="parentCid" column="parent_cid"/>
@@ -15,6 +18,57 @@
         <result property="productUnit" column="product_unit"/>
         <result property="productCount" column="product_count"/>
     </resultMap>
+
+    <resultMap id="psmCategoryVoMap"
+               type="com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo"
+               extends="pmsCategoryMap">
+        <collection property="childCats"
+                    column="{parentCid=cat_id}"
+                    ofType="com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo"
+                    select="selectCatTree">
+        </collection>
+    </resultMap>
+
+    <resultMap id="psmCategoryVoMapNoChildren"
+               type="com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo"
+               extends="pmsCategoryMap">
+    </resultMap>
+
+    <!--使用mybatis查询树形结构-->
+    <select id="selectCatTree" resultMap="psmCategoryVoMap">
+        select cat_id, name, parent_cid, cat_level, show_status, sort, icon, product_unit, product_count
+        from pms_category
+        where parent_cid=
+        <choose>
+            <when test="parentCid == null">0</when>
+            <otherwise> #{parentCid}</otherwise>
+        </choose>
+    </select>
+
+    <select id="selectDirectChildren" resultMap="psmCategoryVoMapNoChildren">
+        select cat_id, name, parent_cid, cat_level, show_status, sort, icon, product_unit, product_count
+        from pms_category
+        where parent_cid=
+        <choose>
+            <when test="parentCid == null">0</when>
+            <otherwise> #{parentCid}</otherwise>
+        </choose>
+    </select>
+
+    <select id="selectCatsInDeepth" resultType="com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo">
+        select cat_id, name, parent_cid, cat_level, show_status, sort, icon, product_unit, product_count
+        from pms_category
+        where cat_level=
+        <choose>
+            <when test="deepth == null">0</when>
+            <otherwise>#{deepth}</otherwise>
+        </choose>
+    </select>
+
+    <select id="selectListNotTree" resultType="com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo">
+        select cat_id, name, parent_cid, cat_level, show_status, sort, icon, product_unit, product_count
+        from pms_category
+    </select>
 
 
 </mapper>
