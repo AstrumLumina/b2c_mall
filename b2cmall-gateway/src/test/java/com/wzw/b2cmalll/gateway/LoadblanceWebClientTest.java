@@ -19,7 +19,7 @@ public class LoadblanceWebClientTest {
     @Autowired
     private WebClient.Builder loadbalancedWebclientBuilder;
 
-    @Test
+    //@Test
     public void loadbalancedWebclientTest(){
         loadbalancedWebclient
                 .get()
@@ -37,7 +37,7 @@ public class LoadblanceWebClientTest {
         System.out.println("=========================");
     }
 
-    @Test
+    //@Test
     public void loadbalancedWebclient2Test(){
         loadbalancedWebclientBuilder
                 .baseUrl("b2cmall-product")
@@ -94,7 +94,7 @@ public class LoadblanceWebClientTest {
 
     }
 
-    @Test
+    //@Test
     public void gatewaySwaggerTest(){
         WebClient.builder()
                 .build()

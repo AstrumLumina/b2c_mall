@@ -45,6 +45,9 @@ public class PmsCategoryController {
             if (validateCategoryParamDeepthHasError(deepth)){
                 return R.error("startDeepth greater than endDeepth,or out range");
             }
+            if(deepth==null){
+                deepth=Constant.MAX_PMS_CATEGORY_LEVEL;
+            }
             return R.ok().setData(pmsCategoryService.queryCategoryTree(catParentId, deepth));
         }
     }
@@ -77,7 +80,7 @@ public class PmsCategoryController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{catId}")
+    @GetMapping("/info/{catId}")
     //@RequiresPermissions("b2cmallproduct:pmscategory:info")
     public R info(@PathVariable("catId") Long catId){
         PmsCategoryEntity pmsCategory = pmsCategoryService.getById(catId);
@@ -99,20 +102,30 @@ public class PmsCategoryController {
     /**
      * 修改
      */
-    @RequestMapping("/update")
+    @PostMapping("/update")
     //@RequiresPermissions("b2cmallproduct:pmscategory:update")
-    public R update(@RequestBody PmsCategoryEntity pmsCategory){
+    public R<Void> update(@RequestBody PmsCategoryEntity pmsCategory){
         pmsCategoryService.updateById(pmsCategory);
 
         return R.ok();
     }
 
     /**
+     * 批量修改
+     */
+    @PostMapping("/update/batch")
+    //@RequiresPermissions("b2cmallproduct:pmscategory:update")
+    public R<Void> updateCatVoBatch(@RequestBody List<PmsCategoryVo> pmsCategoryVos){
+        int count = pmsCategoryService.updateCategoryByTrees(pmsCategoryVos);
+        return R.ok(count+" cats updated success");
+    }
+
+    /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @DeleteMapping("/delete")
     //@RequiresPermissions("b2cmallproduct:pmscategory:delete")
-    public R delete(@RequestBody Long[] catIds){
+    public R delete(@RequestBody @ApiParam("要删除的分类的id数组") Long[] catIds){
         pmsCategoryService.removeByIds(Arrays.asList(catIds));
 
         return R.ok();

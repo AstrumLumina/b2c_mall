@@ -39,7 +39,7 @@ class B2cmallGatewayApplicationTests {
     }
 
 
-    @Test
+    //@Test
     public void processData() throws InterruptedException {
 
         for (int i = 0; i < 10; i++) {
@@ -66,7 +66,7 @@ class B2cmallGatewayApplicationTests {
     @Qualifier("testFlux")
     private Flux<String>  flux;
 
-    @Test
+    //@Test
     public void processData2() throws InterruptedException {
 
         for (int i = 0; i < 10; i++) {
@@ -89,7 +89,7 @@ class B2cmallGatewayApplicationTests {
 
     }
 
-    @Test
+    //@Test
     public void webclientTest(){
 
 

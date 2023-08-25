@@ -56,5 +56,7 @@ public interface PmsCategoryService extends IService<PmsCategoryEntity> {
      * @Company: 版权所有
      **/
     List<PmsCategoryVo> queryCategoryTreeInDeepth(Integer startDeepth,Integer endDeepth) ;
+
+    int updateCategoryByTrees(List<PmsCategoryVo> pmsCategoryVos);
 }
 

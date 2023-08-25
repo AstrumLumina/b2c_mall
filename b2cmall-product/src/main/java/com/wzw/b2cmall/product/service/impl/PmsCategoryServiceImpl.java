@@ -99,7 +99,7 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryDao, PmsCateg
             }
             int count=pmsCategoryVoListDeque.size();
             while (count-- > 0){
-                for (PmsCategoryVo pmsCategoryVo : pmsCategoryVoListDeque.peekFirst()) {
+                for (PmsCategoryVo pmsCategoryVo : pmsCategoryVoListDeque.pollFirst()) {
                     List<PmsCategoryVo> children = pmsCategoryDao.selectDirectChildren(pmsCategoryVo.getCatId());
                     if (children.size()!=0){
                         pmsCategoryVoListDeque.addLast(children);
@@ -111,6 +111,38 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryDao, PmsCateg
         return pmsCategoryVoTree;
     }
 
+    @Override
+    public int updateCategoryByTrees(List<PmsCategoryVo> pmsCategoryVos) {
+        if (pmsCategoryVos==null){
+            return 0;
+        }
+        //广度优先遍历更新
+        Deque<List<PmsCategoryVo>> listDeque=new LinkedList<>();
+        listDeque.add(pmsCategoryVos);
+        List<PmsCategoryEntity> pmsCategoryEntityList=new ArrayList<>();
+        int updatedCount=0;
+        while (listDeque.size()>0){
+            List<PmsCategoryVo> categoryVos = listDeque.pollFirst();
+            categoryVos.removeIf(Objects::isNull);//提前过来空元素
+            categoryVos.forEach(pmsCategoryVo -> {
+                if (pmsCategoryVo!=null&&pmsCategoryVo.getChildCats()!=null){
+                    listDeque.addLast(pmsCategoryVo.getChildCats());
+                }
+            });
+            if (categoryVos.size()>0){
+                pmsCategoryEntityList.clear();
+                pmsCategoryEntityList.addAll(categoryVos);
+                //pmsCategoryEntityList.removeIf(Objects::isNull);//过滤掉空元素,防止报错 为防止跑异常,上移过滤操作
+                if (updateBatchById(pmsCategoryEntityList)){//当list元素个数为0时返回 false ,会导致无关报错 要提前过过滤掉集合个数为0的情况
+                    updatedCount+=pmsCategoryEntityList.size();
+                }else {
+                    throw new RuntimeException("update batch pmsCategoryEntity fail");
+                }
+            }
+        }
+        return updatedCount;
+    }
+
     private List<PmsCategoryVo> getPmsCategoryVoByParentId(List<PmsCategoryVo> pmsCategoryVoList,Long parentId,int restDeepth){
         if (restDeepth<=0){
             return null;
@@ -119,16 +151,24 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryDao, PmsCateg
             pmsCategoryVoList=pmsCategoryDao.selectListNotTree();
         }
         List<PmsCategoryVo> finalPmsCategoryVoList = pmsCategoryVoList;
-        return pmsCategoryVoList
+        List<PmsCategoryVo> collect = pmsCategoryVoList
                 .stream()
-                .filter(categoryVo -> categoryVo.getParentCid() == parentId)
-                .map(pmsCategoryVo->{
-                    if (pmsCategoryVo.getCatLevel()<= Constant.MAX_PMS_CATEGORY_LEVEL)
-                        pmsCategoryVo.setChildCats(getPmsCategoryVoByParentId(finalPmsCategoryVoList,pmsCategoryVo.getCatId(),restDeepth-1));
+                //.filter(categoryVo -> categoryVo.getParentCid() == parentId) //封装类型必须使用equal
+                .filter(categoryVo -> categoryVo.getParentCid().equals(parentId))
+                .map(pmsCategoryVo -> {
+                    if (pmsCategoryVo.getName().equals("test2")){
+                        System.out.println("enter test2");
+                    }
+                    if (pmsCategoryVo.getCatId()==1426L){
+                        log.debug("enter error category");
+                    }
+                    if (pmsCategoryVo.getCatLevel() < Constant.MAX_PMS_CATEGORY_LEVEL)
+                        pmsCategoryVo.setChildCats(getPmsCategoryVoByParentId(finalPmsCategoryVoList, pmsCategoryVo.getCatId(), restDeepth - 1));
                     return pmsCategoryVo;
                 })
-                .sorted((categoryVo1,categoryVo2)-> (categoryVo1.getSort()==null?0:categoryVo1.getSort()) - (categoryVo2.getSort()==null?0:categoryVo2.getSort()))
+                .sorted((categoryVo1, categoryVo2) -> (categoryVo1.getSort() == null ? 0 : categoryVo1.getSort()) - (categoryVo2.getSort() == null ? 0 : categoryVo2.getSort()))
                 .collect(Collectors.toList());
+        return collect;
     }
 
 //    //方案二

@@ -31,14 +31,16 @@ public class R<T>{
     public static final String CODE_KEY="code";
     public static final String DATA_KEY="data";
     public static final String MSG_KEY="msg";
-
+    public static final String PAGE_KEY="page";
 
     @ApiModelProperty(value = "自定义状态码",example = "0")
     private Integer code;
     @ApiModelProperty(value = "提示消息",example = "success")
     private String msg;
-    //@ApiModelProperty(value = "返回数据")
+    @ApiModelProperty(value = "返回数据")
     private T data;
+    @ApiModelProperty(value = "返回的分页数据")
+    private PageUtils page;
     @ApiModelProperty(value = "额外的数据信息:扩展功能(信息)")
     private Map<String,Object> extraData;
 
@@ -74,7 +76,10 @@ public class R<T>{
             return setCode((Integer) value);
         }
         if (key.equals(MSG_KEY)){
-            return setMsg(msg);
+            return setMsg((String) value);
+        }
+        if (key.equals(PAGE_KEY)){
+            return setPage((PageUtils) value);
         }
 
         if (extraData==null){
@@ -104,9 +109,14 @@ public class R<T>{
         if (key.equals(MSG_KEY)){
             return msg;
         }
-
-        if (extraData==null){
+        if (key.equals(PAGE_KEY)){
+            return page;
+        }
+        if (extraData!=null&&extraData.containsKey(key)){
             return extraData.get(key);
+        }
+        if (key.equals(DATA_KEY)){
+            return data;
         }
         return null;
     }
@@ -144,9 +154,10 @@ public class R<T>{
         return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, "未知异常，请联系管理员");
     }
 
-    public static <G> R<G> ok(int code, String msg,G data){
-        return new R<G>(code,msg,data);
-    }
+    //    //成功则放回0,因此这里在设置参数容易引起误会,这里不要此构造函数
+//    public static <G> R<G> ok(int code, String msg,G data){
+//        return new R<G>(code,msg,data);
+//    }
     public static <G> R<G> ok(String msg) {
         return new R().setMsg(msg);
     }
@@ -166,8 +177,6 @@ public class R<T>{
         });
         return r;
     }
-
-
 
 
 }
