@@ -12,7 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
+//跨域配置在网关处统一配置,避免重复配置
+//@Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
     @Override

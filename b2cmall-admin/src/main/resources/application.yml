@@ -1,19 +1,25 @@
+debug: true
+
 # Tomcat
 server:
+  port: 8080
+  servlet:
+    context-path: /b2cmall/admin
   tomcat:
     uri-encoding: UTF-8
     threads:
       max: 1000
       min-spare: 30
     connection-timeout: 5000ms
-  port: 8080
-  servlet:
-    context-path: /renren-fast
+
 
 spring:
   # 环境 dev|test|prod
   profiles:
     active: dev
+
+  application:
+    name: b2cmall-admin
   # jackson时间格式化
   jackson:
     time-zone: GMT+8
@@ -42,6 +48,22 @@ spring:
       matching-strategy: ANT_PATH_MATCHER
 #  resources:
 #    add-mappings: false
+
+  # 通过此配置就可以不用bootstrap引导配置了,任需要配置nacos config 服务器 地址
+  config:
+    import: optional:nacos:b2cmall-admin  # 格式: nacos:+dataId 或者 optional:nacos:+dataId  ,引入nacos启动的配置文件
+  cloud:
+    nacos:
+      config:
+        server-addr: 10.0.0.208:8848 #必须要配置,因为会在这里来找配置,而不是外层来找配置,在外层即使配置也无效
+      discovery:
+        fail-fast: false  #关闭快速失败功能,这样可以先启动服务在启动nacos而不会报错
+      username: nacos
+      password: nacos
+      server-addr: 10.0.0.208:8848
+
+
+
 
 
 #mybatis

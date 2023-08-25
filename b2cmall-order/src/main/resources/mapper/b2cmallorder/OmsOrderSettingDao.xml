@@ -4,7 +4,7 @@
 <mapper namespace="com.wzw.b2cmall.b2cmallorder.dao.OmsOrderSettingDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.wzw.b2cmall.b2cmallorder.entity.OmsOrderSettingEntity" id="omsOrderSettingMap">
+    <resultMap type="com.wzw.b2cmall.order.pojo.entity.OmsOrderSettingEntity" id="omsOrderSettingMap">
         <result property="id" column="id"/>
         <result property="flashOrderOvertime" column="flash_order_overtime"/>
         <result property="normalOrderOvertime" column="normal_order_overtime"/>

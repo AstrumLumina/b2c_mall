@@ -1,10 +1,19 @@
 # 应用服务 WEB 访问端口
 server:
   port: 8082
+  servlet:
+    context-path: /b2cmall/member
 
 debug: false
 
 spring:
+  application:
+    name: b2cmall-member
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
   datasource:
     username: root
     password: root
@@ -14,6 +23,19 @@ spring:
     url: jdbc:mysql://10.0.0.208:3306/b2cmall_ums?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 10.0.0.208
+        username: nacos
+        password: nacos
+      config:
+        server-addr: 10.0.0.208:8848
+
+
+  # 通过此配置就可以不用bootstrap引导配置了,任需要配置nacos config 服务器 地址
+  config:
+    import: optional:nacos:b2cmall-member  # 格式: nacos:+dataId 或者 optional:nacos:+dataId  ,引入nacos启动的配置文件
 
 
 mybatis-plus:

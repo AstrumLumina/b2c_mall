@@ -1,10 +1,23 @@
 # 应用服务 WEB 访问端口
 server:
   port: 8084
+  servlet:
+    context-path: /b2cmall/product
 
-debug: false
+
+debug: true
+
 
 spring:
+  application:
+    name: b2cmall-product
+
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher  #解决swagger3 报错
+
+
   datasource:
     username: root
     password: root
@@ -13,6 +26,28 @@ spring:
     #jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;characterEncodeing=UTF-8&amp;useSSL=false&amp;serverTimezone=GMT
     url: jdbc:mysql://10.0.0.208:3306/b2cmall_pms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    nacos:
+      discovery: #必须要在这里配置服务地址,在nacos: 下配置服务地址无效,指定不明确
+        server-addr: 10.0.0.208:8848
+        username: nacos
+        password: nacos
+        fail-fast: false  #关闭快速失败功能,这样可以先启动服务在启动nacos而不会报错
+
+      config:
+        server-addr: 10.0.0.208:8848
+
+
+  # 通过此配置就可以不用bootstrap引导配置了,任需要配置nacos config 服务器 地址
+  config:
+    import: optional:nacos:b2cmall-product  # 格式: nacos:+dataId 或者 optional:nacos:+dataId  ,引入nacos启动的配置文件
+
+# 取消bootstrap后,新版的spring cloud config 配置示例,也可以导入 starter-bootstrap ,然后使用bootstrap.properties文件
+#  spring.cloud.config.discovery.enabled=true
+#  spring.cloud.config.discovery.service-id=config-server
+#  spring.config.import=optional:configserver:http://localhost:8003
+#  spring.cloud.config.name=${spring.application.name}
+#  spring.cloud.config.profile=${spring.profiles.active}  #这些是git config 的配置,可以不用管,这里使用nacos
 
 
 
@@ -21,3 +56,42 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+
+
+
+
+costum:
+  swagger:
+    gateway-application-name: b2cmallgateway,
+  selfServicePath: http://127.0.0.1:8084/  # 定义外部访问本服务的的地址
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 这些都是默认配置,可以删除
+#springfox:
+#  documentation:
+#    swagger-ui:
+#      enabled: true
+#    enabled: true
+#    swagger:
+#      v2:
+#        enabled: false
+
+

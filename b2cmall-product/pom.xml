@@ -31,7 +31,30 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
 
+        <!--引入该依赖 使用其 BeanCopier类来进行对象间属性复制
+        画外音：如果你工程内还有 Spring-Core 的话，如果查找 BeanCopier 这个类，可以发现两个不同的包的同名类。
+               一个属于 Cglib，另一个属于 Spring-Core。其实 Spring-Core 内BeanCopier
+               实际就是引入了 Cglib 中的类，这么做的目的是为了了保证 Spring 使用长度 Cglib 相关类的稳定性，
+               防止外部 Cglib 依赖不一致，导致 Spring 运行异常。
+
+         为了减少依赖的引入这里使用spring-core中的 BeanCopier，本质上是同一个，可以实现同一个效果
+         -->
+      <!--  <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+        </dependency>
+       -->
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
     </dependencies>
 
 
@@ -51,7 +74,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.wzw.b2cmall.b2cmallproduct.B2cmallProductApplication</mainClass>
+                    <mainClass>com.wzw.b2cmall.product.B2cmallProductApplication</mainClass>
                     <skip>true</skip>
                 </configuration>
                 <executions>

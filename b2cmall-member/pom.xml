@@ -12,6 +12,7 @@
         <artifactId>b2cmall-parent</artifactId>
         <groupId>com.wzw.b2cmall</groupId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath></relativePath>
     </parent>
 
 
@@ -28,6 +29,18 @@
             <groupId>com.wzw.b2cmall</groupId>
             <artifactId>b2cmall-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
     </dependencies>
 
@@ -46,7 +59,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.wzw.b2cmall.b2cmallmember.B2cmallMemberApplication</mainClass>
+                    <mainClass>com.wzw.b2cmall.member.B2cmallMemberApplication</mainClass>
                     <skip>true</skip>
                 </configuration>
                 <executions>

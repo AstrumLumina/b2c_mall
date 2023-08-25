@@ -18,9 +18,9 @@
         <module>b2cmall-ware</module>
         <module>b2cmall-common</module>
         <module>b2cmall-parent</module>
+        <module>b2cmall-gateway</module>
 
         <module>b2cmall-admin</module>
-        <module>renren-generator</module>
     </modules>
 
 
