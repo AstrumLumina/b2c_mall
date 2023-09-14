@@ -3,19 +3,41 @@ server:
   port: 8084
   servlet:
     context-path: /b2cmall/product
-
-
 debug: true
 
-
 spring:
+  profiles:
+    active:
   application:
     name: b2cmall-product
-
-
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher  #解决swagger3 报错
+      # 通过此配置就可以不用bootstrap引导配置了,任需要配置nacos config 服务器 地址
+  config:
+    import:  #导入多个配置文件时,后导入的(即在该数组中位置越靠后,优先级越高)
+      # 共享配置放到最前面
+      -  optional:nacos:test?group=DEFAULT_GROUP&timeout=5000&refresh=true
+      -  optional:nacos:b2cmall-share-swagger?group=DEFAULT_GROUP&timeout=5000&refresh=true
+      -  optional:nacos:b2cmall-share-mybatisplus?group=DEFAULT_GROUP&timeout=5000&refresh=true
+      # 扩张配置放到中间
+      - optional:nacos:b2cmall-product-datasource?timeout=5000
+      #主要配置放到最后
+      - optional:nacos:b2cmall-product?timeout=5000&refresh=true # 格式: nacos:+dataId 或者 optional:nacos:+dataId  ,引入nacos启动的配置文件
+
+  cloud:
+    nacos:
+      config:
+        server-addr: 10.0.0.208:8848
+        file-extension: yaml
+        namespace: 3a82f61e-ec33-4f19-ba9e-cb5968d60f2e # 开发环境 b2cmall-dev 命名空间
+        group: PRODUCT_DEFAULT_GROUP
+
+      discovery: #必须要在这里配置服务地址,在nacos: 下配置服务地址无效,指定不明确
+        server-addr: 10.0.0.208:8848
+        username: nacos
+        password: nacos
+        fail-fast: false  #关闭快速失败功能,这样可以先启动服务在启动nacos而不会报错
 
 
   datasource:
@@ -26,21 +48,8 @@ spring:
     #jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;characterEncodeing=UTF-8&amp;useSSL=false&amp;serverTimezone=GMT
     url: jdbc:mysql://10.0.0.208:3306/b2cmall_pms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
-  cloud:
-    nacos:
-      discovery: #必须要在这里配置服务地址,在nacos: 下配置服务地址无效,指定不明确
-        server-addr: 10.0.0.208:8848
-        username: nacos
-        password: nacos
-        fail-fast: false  #关闭快速失败功能,这样可以先启动服务在启动nacos而不会报错
-
-      config:
-        server-addr: 10.0.0.208:8848
 
 
-  # 通过此配置就可以不用bootstrap引导配置了,任需要配置nacos config 服务器 地址
-  config:
-    import: optional:nacos:b2cmall-product  # 格式: nacos:+dataId 或者 optional:nacos:+dataId  ,引入nacos启动的配置文件
 
 # 取消bootstrap后,新版的spring cloud config 配置示例,也可以导入 starter-bootstrap ,然后使用bootstrap.properties文件
 #  spring.cloud.config.discovery.enabled=true
@@ -56,6 +65,8 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true
 
 
 
@@ -64,8 +75,6 @@ costum:
   swagger:
     gateway-application-name: b2cmallgateway,
   selfServicePath: http://127.0.0.1:8084/  # 定义外部访问本服务的的地址
-
-
 
 
 

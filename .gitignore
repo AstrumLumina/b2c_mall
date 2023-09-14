@@ -31,3 +31,6 @@ buildNumber.properties
 /temp_generate_codes
 # 自动生成代码的模块
 /renren-generator
+
+# maven版本号管理插件的多余配置文件
+.flattened-pom.xml

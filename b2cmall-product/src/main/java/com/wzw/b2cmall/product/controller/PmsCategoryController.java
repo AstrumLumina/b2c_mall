@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.wzw.b2cmall.common.utils.Constant;
-import com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo;
+import com.wzw.b2cmall.product.pojo.dto.PmsCategoryDto;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +36,8 @@ public class PmsCategoryController {
      * 树状商品分类
      */
     @GetMapping({  "/tree" , "/tree/{catParentId}" , "/tree/{catParentId}/{deepth}" })
-    public R<List<PmsCategoryVo>> getCategoryTreeByPid(@ApiParam(required = false) @PathVariable(value = "catParentId",required = false) Long catParentId,
-                                                       @ApiParam(required = false) @PathVariable(value = "deepth",required = false) Integer deepth){
+    public R<List<PmsCategoryDto>> getCategoryTreeByPid(@ApiParam(required = false) @PathVariable(value = "catParentId",required = false) Long catParentId,
+                                                        @ApiParam(required = false) @PathVariable(value = "deepth",required = false) Integer deepth){
 
         if (catParentId==null&&deepth==null){
             return R.ok().setData(pmsCategoryService.queryCategoryTree());
@@ -68,10 +68,12 @@ public class PmsCategoryController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @GetMapping("/list")
     //@RequiresPermissions("b2cmallproduct:pmscategory:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = pmsCategoryService.queryPage(params);
+
+
 
         return R.ok().put("page", page);
     }
@@ -82,16 +84,16 @@ public class PmsCategoryController {
      */
     @GetMapping("/info/{catId}")
     //@RequiresPermissions("b2cmallproduct:pmscategory:info")
-    public R info(@PathVariable("catId") Long catId){
+    public R<PmsCategoryDto> info(@PathVariable("catId") Long catId){
         PmsCategoryEntity pmsCategory = pmsCategoryService.getById(catId);
 
-        return R.ok().put("pmsCategory", pmsCategory);
+        return R.ok().put("pmsCategory", new PmsCategoryDto(PmsCategoryEntity.class,pmsCategory));
     }
 
     /**
      * 保存
      */
-    @RequestMapping("/save")
+    @PostMapping("/save")
     //@RequiresPermissions("b2cmallproduct:pmscategory:save")
     public R save(@RequestBody PmsCategoryEntity pmsCategory){
         pmsCategoryService.save(pmsCategory);
@@ -113,10 +115,10 @@ public class PmsCategoryController {
     /**
      * 批量修改
      */
-    @PostMapping("/update/batch")
+    @PostMapping("/update/tree/batch")
     //@RequiresPermissions("b2cmallproduct:pmscategory:update")
-    public R<Void> updateCatVoBatch(@RequestBody List<PmsCategoryVo> pmsCategoryVos){
-        int count = pmsCategoryService.updateCategoryByTrees(pmsCategoryVos);
+    public R<Void> updateCatDtoTreeBatch(@RequestBody List<PmsCategoryDto> pmsCategoryDtos){
+        int count = pmsCategoryService.updateCategoryByTrees(pmsCategoryDtos);
         return R.ok(count+" cats updated success");
     }
 

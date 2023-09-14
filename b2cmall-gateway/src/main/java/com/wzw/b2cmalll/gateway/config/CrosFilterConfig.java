@@ -1,11 +1,17 @@
 package com.wzw.b2cmalll.gateway.config;
 
 
+import com.wzw.b2cmalll.gateway.component.MyCorsWebFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class CrosFilterConfig {
@@ -21,19 +27,37 @@ public class CrosFilterConfig {
      Spring Boot Web 使用了 Servlet 容器（如 Tomcat、Jetty 等），
      而这些容器在处理过滤器时需要按照 Servlet 规范的方式进行配置。
 */
-   @Bean
+    //@Bean
     public CorsWebFilter corsWebFilter(){
+       CorsConfiguration corsConfiguration = new CorsConfiguration();
+       corsConfiguration.addAllowedHeader("*");
+       corsConfiguration.addAllowedOriginPattern("*");
+       corsConfiguration.addAllowedMethod("*");
+       corsConfiguration.setAllowCredentials(true);
+       UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+       /*
+       * 先将不需要拦截的路径注册一个做任何处理的cors拦截器,以便排除掉该路劲的cors过滤
+       * */
+       urlBasedCorsConfigurationSource.registerCorsConfiguration("/**",corsConfiguration);
+
+       return new  CorsWebFilter(urlBasedCorsConfigurationSource);
+    }
+
+    @Bean
+    public CorsWebFilter mYCorsWebFilter(){
+        //不需要添加cors响应头的路径
+        List<String> excludePaths= Arrays.asList("/b2cmall/minio/**");
+
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedOriginPattern("*");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.setAllowCredentials(true);
-
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**",corsConfiguration);
-
-        return new  CorsWebFilter(urlBasedCorsConfigurationSource);
+        return new MyCorsWebFilter(urlBasedCorsConfigurationSource,excludePaths);
     }
+
 
 }
 

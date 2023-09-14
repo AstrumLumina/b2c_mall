@@ -1,0 +1,10 @@
+minio:
+  enableAutoconfig: true
+  server:
+    endpoint: http://127.0.0.1:9001
+    accesKey: minio
+    secrectKey: password
+    bucketName: test.bucketname.first
+    uploadSignatureExpire: 60
+    downloadSignatureExpire: 10
+    uploadFileDataFolderFormat: "yyyy-MM-dd"

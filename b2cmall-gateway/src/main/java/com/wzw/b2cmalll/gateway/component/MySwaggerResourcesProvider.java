@@ -2,6 +2,7 @@ package com.wzw.b2cmalll.gateway.component;
 
 
 import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @Primary  //(可能)swagger自己往容器中添加了此类别的配置类,因此将自己的类作为注入的首选项 ,防止注入springfox自己的 inMemorySwaggerResourcesProvider
-@Log4j
+@Slf4j
 public class MySwaggerResourcesProvider implements SwaggerResourcesProvider{
     /**
      * swagger默认的url后缀
@@ -128,17 +129,14 @@ public class MySwaggerResourcesProvider implements SwaggerResourcesProvider{
     }
 
 
-    private SwaggerResource swaggerResource(String name, String location) {
+    /*private SwaggerResource swaggerResource(String name, String location) {
         SwaggerResource swaggerResource = new SwaggerResource();
         swaggerResource.setName(name);
         swaggerResource.setLocation(location);
         swaggerResource.setSwaggerVersion("3.0");
         return swaggerResource;
-    }
+    }*/
 
-    private List<SwaggerResource> getSwaggerResourceFromGateWay(){
-        return null;
-    }
     private void checkAndAddSwaggerResourceFromPossibleRoute(URI possibleRouteURI,String possibleRouteId,String gatewayPredicatePath){
         checkedRouteIds.add(possibleRouteId);
         String host = possibleRouteURI.getHost();
@@ -164,7 +162,7 @@ public class MySwaggerResourcesProvider implements SwaggerResourcesProvider{
                                 swaggerResource.setUrl(gatewayPredicatePath+getSwaggerResourceUrlSuffix(swaggerResource.getUrl()));
                                 swaggerResource.setName(possibleRouteURI.getHost() + ":" + swaggerResource.getName());
                             });
-                            log.debug("debug:  add swaggerResources: "+swaggerResources.size());
+                            log.debug("add swaggerResources: "+swaggerResources.size());
                             checkedResources.addAll(swaggerResources);
                         }
                     });

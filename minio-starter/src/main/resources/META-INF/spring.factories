@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.wzw.b2cmall.minio.autoconfig.MinioClientAutoConfiguration

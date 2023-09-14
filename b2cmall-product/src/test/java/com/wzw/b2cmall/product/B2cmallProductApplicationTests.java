@@ -2,8 +2,8 @@ package com.wzw.b2cmall.product;
 
 import com.wzw.b2cmall.product.dao.PmsBrandDao;
 import com.wzw.b2cmall.product.dao.PmsCategoryDao;
+import com.wzw.b2cmall.product.pojo.dto.PmsCategoryDto;
 import com.wzw.b2cmall.product.pojo.entity.PmsBrandEntity;
-import com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo;
 import com.wzw.b2cmall.product.service.PmsBrandService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ class B2cmallProductApplicationTests implements ApplicationContextAware {
     @Test
     void testSelectPmaCategoryTree(){
 
-        List<PmsCategoryVo> pmsCategoryVos = pmsCategoryDao.selectCatTree(0L);
+        List<PmsCategoryDto> pmsCategoryVos = pmsCategoryDao.selectCatDtoTree(0L);
         System.out.println(pmsCategoryVos);
     }
 

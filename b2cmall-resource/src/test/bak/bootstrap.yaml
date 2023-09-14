@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        username: nacos
+        password: nacos
+        server-addr: 10.0.0.208:8848:8848
+        file-extension: yaml
+        extension-configs:
+
+  config:
+    import: optional:nacos:${spring.application.name}.${spring.cloud.nacos.config.file-extension}

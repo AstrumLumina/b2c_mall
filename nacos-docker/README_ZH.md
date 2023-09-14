@@ -30,6 +30,10 @@
   第一次启动Nacos前需要手动初始化 [数据库脚本](https://github.com/alibaba/nacos/blob/master/distribution/conf/mysql-schema.sql)
 
 ## 快速开始
+可以提前设置docker版本好,通过环境变量覆盖默认值
+```shell
+export NACOS_VERSION=v2.2.0
+```
 
 打开命令窗口执行：
 

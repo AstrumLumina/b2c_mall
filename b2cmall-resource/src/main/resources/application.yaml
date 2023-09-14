@@ -1,0 +1,54 @@
+server:
+  port: 8087
+  servlet:
+    context-path: /b2cmall/resource
+
+debug: true
+
+spring:
+  profiles:
+    active:
+  application:
+    name: b2cmall-resource
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher  #解决swagger3 报错
+
+  config:
+    import:
+      # 共享配置放到最前面
+      - optional:nacos:b2cmall-share-swagger?group=DEFAULT_GROUP&timeout=5000&refresh=true
+      # 扩张配置放到中间
+      - optional:nacos:b2cmall-resource-minio?timeout=5000
+      #主要配置放到最后
+      - optional:nacos:b2cmall-resource
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 10.0.0.208:8848
+        username: nacos
+        password: nacos
+        fail-fast: false
+
+      config:
+        server-addr: 10.0.0.208:8848
+        username: nacos
+        password: nacos
+        file-extension: yaml
+        group: RESOURCE_DEFAULT_GROUP
+        namespace: 3a82f61e-ec33-4f19-ba9e-cb5968d60f2e
+
+
+minio:
+  enableAutoconfig: true
+  server:
+    endpoint: http://10.0.0.208:9000
+    accesKey: minio
+    secrectKey: password
+    bucketName: b2cmall.product.category
+    uploadSignatureExpire: 6000  #为了便于测试调大  #60  #1分钟
+    downloadSignatureExpire: 300 #5分钟
+    uploadFileDataFolderFormat: "yyyy-MM-dd"
+
+
+

@@ -19,17 +19,18 @@
         <module>b2cmall-common</module>
         <module>b2cmall-parent</module>
         <module>b2cmall-gateway</module>
-
+        <module>b2cmall-resource</module>
         <module>b2cmall-admin</module>
-    </modules>
+        <module>minio-starter</module>
+        <module>b2cmall-product/b2cmall-product-client</module>
 
+    </modules>
 
 
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot.version>2.7.6</spring-boot.version>
     </properties>
 
     <dependencyManagement>

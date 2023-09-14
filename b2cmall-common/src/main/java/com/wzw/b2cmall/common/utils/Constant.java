@@ -44,7 +44,11 @@ public class Constant {
      */
     public static final String ASC = "asc";
 
+   /**
+    *商品3级分类分类,最大为3级
+    **/
     public static final Integer MAX_PMS_CATEGORY_LEVEL=3;
+    public static final String MINIO_POST_UPLOAD_URL="postUploadUrl";
 
     /**
      * 菜单类型

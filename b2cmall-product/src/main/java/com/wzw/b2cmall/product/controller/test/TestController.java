@@ -1,7 +1,7 @@
 package com.wzw.b2cmall.product.controller.test;
 
-import com.wzw.b2cmall.product.feign.member.UserService;
 import com.wzw.b2cmall.common.utils.R;
+import com.wzw.b2cmall.product.feign.member.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,8 @@ public class TestController {
     //测试nacos配置中心  user.name自己的配置无效,使用的是操作系统的user.name
     @Value("${product.user.name: undefined}")
     private String userName;
-
+    @Value("${product.test: undefined}")
+    private String test;
 
 
     @ApiOperation(value = "远程过程调用测试",
@@ -52,6 +53,7 @@ public class TestController {
         R r = new R();
         r.put("product.configTest",configTest);
         r.put("product.user.name",userName);
+        r.put("product.test",test);
         return r;
     }
 

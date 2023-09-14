@@ -26,6 +26,7 @@ import java.util.Map;
 @Data
 @Accessors(chain = true)
 public class R<T>{
+
     private static final long serialVersionUID = 1L;
 
     public static final String CODE_KEY="code";
@@ -42,7 +43,7 @@ public class R<T>{
     @ApiModelProperty(value = "返回的分页数据")
     private PageUtils page;
     @ApiModelProperty(value = "额外的数据信息:扩展功能(信息)")
-    private Map<String,Object> extraData;
+    private Map<String,Object> extraDatas;
 
 
     //默认构造函数是成功,为了防止不了解此类的人new意料之外的R,这里限制为私有
@@ -59,6 +60,16 @@ public class R<T>{
         this.msg=msg;
         data=data;
     }
+
+    public T getData() {
+        return data;
+    }
+
+    public R setData(T data) {
+        this.data = data;
+        return this;
+    }
+
     /**
      * @Description: 保存额外的扩展信息,如果data还没有内容,还会默认往map中保存一份名为data的副本
      * @Param java.lang.String key
@@ -70,6 +81,7 @@ public class R<T>{
      * @since JDK 11
      * @Company: 版权所有
      **/
+    @Deprecated
     public R put(String key, Object value) {
         //为了兼容以前的版本 所作的扩展
         if (key.equals(CODE_KEY)){
@@ -81,14 +93,15 @@ public class R<T>{
         if (key.equals(PAGE_KEY)){
             return setPage((PageUtils) value);
         }
+        if (key.equals(DATA_KEY)){
+            return setData((T)value);
+        }
 
-        if (extraData==null){
-            extraData=new HashMap<String,Object>();
+        if (extraDatas ==null){
+            extraDatas =new HashMap<String,Object>();
         }
-        extraData.put(key,value);
-        if (data==null){
-            extraData.put(DATA_KEY,value);
-        }
+        extraDatas.put(key,value);
+
         return this;
     }
     /**
@@ -101,6 +114,7 @@ public class R<T>{
      * @since JDK 11
      * @Company: 版权所有
      **/
+    @Deprecated
     public Object get(String key) {
         //为了兼容以前的版本 所作的扩展
         if (key.equals(CODE_KEY)){
@@ -112,35 +126,21 @@ public class R<T>{
         if (key.equals(PAGE_KEY)){
             return page;
         }
-        if (extraData!=null&&extraData.containsKey(key)){
-            return extraData.get(key);
-        }
         if (key.equals(DATA_KEY)){
             return data;
         }
-        return null;
-    }
-    /**
-     * @Description: 由于以上扩展, 所以需要修改 getData方法,不能使用lombok默认的
-     * @Param
-     * @return T
-     * date 2023/8/18 13:36
-     * @author WangZhiWen
-     * @Version: 1.0
-     * @since JDK 11
-     * @Company: 版权所有
-     **/
-    public T getData(){
-        if (data!=null){
-            return data;
-        }else if (extraData!=null){
-            return (T) extraData.get("data");
+        if (extraDatas !=null&& extraDatas.containsKey(key)){
+            return extraDatas.get(key);
         }
         return null;
     }
-    public R setData(Object data){
-        put(DATA_KEY,data);
+
+    public R putExtraData(String key,Object value){
+        this.extraDatas.put(key,value);
         return this;
+    }
+    public Object getExtraData(String key){
+        return this.extraDatas.get(key);
     }
 
     //error时没有数据 ,因此指定泛型为 void
@@ -154,10 +154,10 @@ public class R<T>{
         return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, "未知异常，请联系管理员");
     }
 
-    //    //成功则放回0,因此这里在设置参数容易引起误会,这里不要此构造函数
-//    public static <G> R<G> ok(int code, String msg,G data){
-//        return new R<G>(code,msg,data);
-//    }
+    /*
+    * 因为同意返回结果会拦截异常并统一返回,因此http协议中携带的 状态码意义不大
+    * 这里的code 0表示成功,是固定值,因此正常放回结果不提供设置code的构造方法
+    * */
     public static <G> R<G> ok(String msg) {
         return new R().setMsg(msg);
     }
@@ -170,6 +170,18 @@ public class R<T>{
     public static <G> R<G> ok() {
         return new R<G>();
     }
+
+    /**
+     * @Description: 兼容以前的api
+     * @Param java.util.Map<java.lang.String map
+     * @ return com.wzw.b2cmall.common.utils.R < G>
+     * date 2023/9/14 22:32
+     * @author WangZhiWen
+     * @Version: 1.0
+     * @since JDK 11
+     * @Company: 版权所有
+     **/
+    @Deprecated
     public static <G> R<G>  ok(Map<String, Object> map) {
         R<G> r = new R();
         map.forEach((key,value)->{

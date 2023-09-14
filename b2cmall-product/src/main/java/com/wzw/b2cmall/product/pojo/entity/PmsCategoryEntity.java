@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 
-import com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.experimental.Accessors;

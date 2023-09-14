@@ -5,7 +5,7 @@
 
     <groupId>com.wzw.b2cmall</groupId>
     <artifactId>b2cmall-product</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${revision}</version>
     <name>b2cmall-product</name>
     <description>b2cmall-product</description>
 
@@ -13,8 +13,8 @@
     <parent>
         <artifactId>b2cmall-parent</artifactId>
         <groupId>com.wzw.b2cmall</groupId>
-        <version>0.0.1-SNAPSHOT</version>
-        <relativePath></relativePath>
+        <version>${revision}</version>
+        <relativePath>../b2cmall-parent/pom.xml</relativePath>
     </parent>
 
     <properties>
@@ -26,9 +26,20 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.wzw.b2cmall</groupId>
+            <artifactId>b2cmall-product-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.wzw.b2cmall</groupId>
             <artifactId>b2cmall-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

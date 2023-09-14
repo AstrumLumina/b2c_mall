@@ -7,7 +7,8 @@
 <mapper namespace="com.wzw.b2cmall.product.dao.PmsCategoryDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.wzw.b2cmall.product.pojo.entity.PmsCategoryEntity" id="pmsCategoryMap">
+    <resultMap id="pmsCategoryMap"
+               type="com.wzw.b2cmall.product.pojo.entity.PmsCategoryEntity" >
         <result property="catId" column="cat_id"/>
         <result property="name" column="name"/>
         <result property="parentCid" column="parent_cid"/>
@@ -19,23 +20,20 @@
         <result property="productCount" column="product_count"/>
     </resultMap>
 
-    <resultMap id="psmCategoryVoMap"
-               type="com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo"
+    <!-- 直接利用mybatis查询出树形结构的map -->
+    <resultMap id="pmsCategoryDtoMap"
+               type="com.wzw.b2cmall.product.pojo.dto.PmsCategoryDto"
                extends="pmsCategoryMap">
         <collection property="childCats"
                     column="{parentCid=cat_id}"
-                    ofType="com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo"
+                    ofType="com.wzw.b2cmall.product.pojo.dto.PmsCategoryDto"
                     select="selectCatTree">
         </collection>
     </resultMap>
 
-    <resultMap id="psmCategoryVoMapNoChildren"
-               type="com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo"
-               extends="pmsCategoryMap">
-    </resultMap>
 
     <!--使用mybatis查询树形结构-->
-    <select id="selectCatTree" resultMap="psmCategoryVoMap">
+    <select id="selectCatDtoTree" resultMap="pmsCategoryDtoMap">
         select cat_id, name, parent_cid, cat_level, show_status, sort, icon, product_unit, product_count
         from pms_category
         where parent_cid=
@@ -45,7 +43,7 @@
         </choose>
     </select>
 
-    <select id="selectDirectChildren" resultMap="psmCategoryVoMapNoChildren">
+    <select id="selectCatDtoDirectChildren" resultType="com.wzw.b2cmall.product.pojo.dto.PmsCategoryDto">
         select cat_id, name, parent_cid, cat_level, show_status, sort, icon, product_unit, product_count
         from pms_category
         where parent_cid=
@@ -55,7 +53,7 @@
         </choose>
     </select>
 
-    <select id="selectCatsInDeepth" resultType="com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo">
+    <select id="selectCatDtosInDeepth" resultType="com.wzw.b2cmall.product.pojo.dto.PmsCategoryDto">
         select cat_id, name, parent_cid, cat_level, show_status, sort, icon, product_unit, product_count
         from pms_category
         where cat_level=
@@ -65,10 +63,22 @@
         </choose>
     </select>
 
-    <select id="selectListNotTree" resultType="com.wzw.b2cmall.product.pojo.vo.PmsCategoryVo">
+    <select id="selectCatDtoListNotTree" resultType="com.wzw.b2cmall.product.pojo.dto.PmsCategoryDto">
         select cat_id, name, parent_cid, cat_level, show_status, sort, icon, product_unit, product_count
         from pms_category
     </select>
 
+    <update id="updateCatDto">
+        update pms_category
+        set
+        <if test="pmsCategoryDto.name!=null"> name=#{pmsCategoryDto.name} </if>
+        <if test="pmsCategoryDto.cat_level!=null"> name=#{pmsCategoryDto.catLevel} </if>
+        <if test="pmsCategoryDto.show_status!=null"> name=#{pmsCategoryDto.showStatus} </if>
+        <if test="pmsCategoryDto.sort!=null"> name=#{pmsCategoryDto.sort} </if>
+        <if test="pmsCategoryDto.icon!=null"> name=#{pmsCategoryDto.icon} </if>
+        <if test="pmsCategoryDto.product_unit!=null"> name=#{pmsCategoryDto.productUnit} </if>
+        <if test="pmsCategoryDto.product_count!=null"> name=#{pmsCategoryDto.count} </if>
+        where cat_id = #{pmsCategoryDto.catId}
+    </update>
 
 </mapper>

@@ -45,8 +45,22 @@ b2c 商城项目,使用当前主流spring cloud alibaba相关技术.
 * ![](./.assert/images/10591279808200.png)
 * 其他版本都是有使用的官方管理的版本
 
+#### 启动项目
+##### 1.启动minio服务
+```shell
+ docker run  --name minio01 -d -p 9000:9000 -p 9001:9001 \
+ -v /data/minios/minio01/config/:/root/.minio \
+ -v /data/minios/minio01/data/:/data \
+ -e "MINIO_ROOT_USER=minio" \
+ -e "MINIO_ROOT_PASSWORD=password" \
+ -e "MINIO_SERVER_URL=http://10.0.0.208:9000" \
+-e "MINIO_BROWSER_REDIRECT_URL=http://10.0.0.208:9001" \
+ minio/minio server /data --console-address :9001
+```
+
 
 #### 扩展资料(备忘)
+##### 1. model
 
 1. POJO（Plain Ordinary Java Object 简单Java对象)
    * 实际就是普通JavaBeans，是为了避免和EJB（Enterprise Java Beans 企业级JavaBeans）混淆所创造的简称，也称为（Plain Old Java Object 又普通又老的对象）。相比于EJB来说，的确是老的对象，因为ORM中间件的日趋流行，POJO又重新焕发了光彩。 
@@ -140,6 +154,8 @@ b2c 商城项目,使用当前主流spring cloud alibaba相关技术.
 * Param：表示请求参数，用于接收前端传递的参数
 * Command：表示命令，用于接收前端传递的命令参数
 
+##### 2. git commit规范
+![](./.assert/images/2711602681000.png)
 
 
 #### 特技

@@ -27,11 +27,18 @@ spring:
     gateway:
       routes:
         - id: b2cmallProduct  # 规范： 请尽量定义为 服务访问地址的上下文路径
-          uri: lb://b2cmall-product   # 这样写报错404 原因未知 lb://b2cmall-product
+          uri: lb://b2cmall-product   # 这样写报错404 原因未知 lb://b2cmall-product/prduct
           predicates:
             - Path=/b2cmall/product/**
           filters:
             #- RewritePath=/b2cmall/product(?<segment>/?.*), /b2cmallProduct$\{segment}
+
+        - id: b2cmallResource  # 规范： 请尽量定义为 服务访问地址的上下文路径
+          uri: lb://b2cmall-resource
+          predicates:
+            - Path=/b2cmall/resource/**
+          filters:
+            #- RewritePath=/b2cmall/resource(?<segment>/?.*), $\{segment}
 
         - id: b2cmallAdmin # 负载均衡转发请求
           uri: lb://b2cmall-admin  # 这样写报错404 原因未知 lb://b2cmall-admin/b2cmallAdmin 把后面这部分添加到路径重写过滤器中去
