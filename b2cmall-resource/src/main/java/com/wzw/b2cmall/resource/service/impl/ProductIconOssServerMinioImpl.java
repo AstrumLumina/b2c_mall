@@ -9,7 +9,6 @@ import com.wzw.b2cmall.minio.utils.MyUrlUtil;
 import com.wzw.b2cmall.product.pojo.dto.PmsCategoryDto;
 import com.wzw.b2cmall.resource.feign.PmsCategoryService;
 import com.wzw.b2cmall.resource.service.ProductIconOssService;
-import io.minio.messages.SseConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -61,14 +60,17 @@ public class ProductIconOssServerMinioImpl implements ProductIconOssService {
             throw new RuntimeException("feign to get pmsCategoryInfo occured error: "+info.getMsg());
         }
         PmsCategoryDto data = info.getData();
-        String iconObjectName=MyUrlUtil.getObjectNameFromRelaPathOrRelaUrl(data.getIcon());;
+        String iconObjectName=null;
+        if (data.getIcon()!=null){
+            iconObjectName=MyUrlUtil.getObjectNameFromRelaPathOrRelaUrl(data.getIcon());
+        }
         if (!StringUtils.hasLength(iconObjectName)){
             iconObjectName =productCategoryIconMinioBucketTemplate.generateObjectNameForFile(data.getName());
         }
         String iconUrl = productCategoryIconMinioBucketTemplate.getPresignedPutUploadObjectUrl(iconObjectName);
         PmsCategoryDto catDtoToUpdate = new PmsCategoryDto();
         catDtoToUpdate.setCatId(catId);
-        catDtoToUpdate.setIcon(iconUrl);
+        catDtoToUpdate.setIcon(MyUrlUtil.getUrlPathFromUrl(iconUrl));
         pmsCategoryService.updatePmscat(catDtoToUpdate);
         return iconUrl;
     }

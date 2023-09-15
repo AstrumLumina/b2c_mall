@@ -185,7 +185,7 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryDao, PmsCateg
     private List<PmsCategoryDto> getPmsCategoryDtoByParentId(List<PmsCategoryDto> pmsCategoryDtoList, Long parentId){
              return pmsCategoryDtoList
                 .stream()
-                .filter(categoryDto -> categoryDto.getParentCid() == parentId)
+                .filter(categoryDto -> categoryDto.getParentCid().equals(parentId))
                 .map(pmsCategoryDto->{
                     if (pmsCategoryDto.getCatLevel()<= Constant.MAX_PMS_CATEGORY_LEVEL)
                         pmsCategoryDto.setChildCats(getPmsCategoryDtoByParentId(pmsCategoryDtoList,pmsCategoryDto.getCatId()));

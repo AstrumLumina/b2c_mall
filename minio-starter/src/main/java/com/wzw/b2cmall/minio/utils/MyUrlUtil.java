@@ -47,5 +47,10 @@ public class MyUrlUtil {
         }
         return relativeUrl.substring(objectNameStratedIndex, objectNameEndInde);
     }
+    //从 url 中获取 urlpath
+    public static String getUrlPathFromUrl(String urlString){
+        int urlPathLength=urlString.indexOf("?");
+        return urlString.substring(0, urlPathLength);
+    }
 
 }

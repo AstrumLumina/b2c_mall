@@ -87,7 +87,7 @@ public class PmsCategoryController {
     public R<PmsCategoryDto> info(@PathVariable("catId") Long catId){
         PmsCategoryEntity pmsCategory = pmsCategoryService.getById(catId);
 
-        return R.ok().put("pmsCategory", new PmsCategoryDto(PmsCategoryEntity.class,pmsCategory));
+        return R.ok().setData(new PmsCategoryDto(PmsCategoryEntity.class,pmsCategory));
     }
 
     /**

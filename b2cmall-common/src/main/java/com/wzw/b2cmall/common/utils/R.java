@@ -26,7 +26,6 @@ import java.util.Map;
 @Data
 @Accessors(chain = true)
 public class R<T>{
-
     private static final long serialVersionUID = 1L;
 
     public static final String CODE_KEY="code";
@@ -62,6 +61,9 @@ public class R<T>{
     }
 
     public T getData() {
+        if (data==null&&extraDatas!=null){ //兼容旧版
+            return (T) extraDatas.get(DATA_KEY);
+        }
         return data;
     }
 
@@ -101,7 +103,9 @@ public class R<T>{
             extraDatas =new HashMap<String,Object>();
         }
         extraDatas.put(key,value);
-
+        if (data==null){
+            extraDatas.put(DATA_KEY,value);
+        }
         return this;
     }
     /**
